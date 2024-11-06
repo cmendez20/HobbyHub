@@ -3,7 +3,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <h1>HobbyHub</h1>
+      <h1 className="text-3xl font-semibold underline">HobbyHub</h1>
     </>
   );
 }
