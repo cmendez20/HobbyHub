@@ -1,8 +1,10 @@
 const Searchbar = () => {
   return (
-    <div>
-      <p>searchbar</p>
-    </div>
+    <input
+      type="text"
+      className="px-4 py-2 rounded-full border-solid border-black border-2 text-black"
+      placeholder="Search"
+    />
   );
 };
 

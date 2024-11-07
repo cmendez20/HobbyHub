@@ -1,11 +1,13 @@
-import { Navbar } from '../../components/Navbar';
-import { Outlet } from 'react-router-dom';
+import { Navbar } from "../../components/Navbar";
+import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <div className="bg-gray-50 min-h-dvh">
+        <Outlet />
+      </div>
     </>
   );
 };
