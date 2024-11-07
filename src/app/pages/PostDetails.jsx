@@ -13,7 +13,17 @@ const PostDetails = () => {
         <p className="font-bold text-xl">post title</p>
         <p className="font-extralight">Post Content</p>
         <p className="font-extralight">Post Image</p>
-        <p className="font-extralight"># of upvotes</p>
+        <div className="flex justify-between items-center">
+          <p className="font-extralight"># of upvotes</p>
+          <div className="flex gap-4">
+            <button className="px-4 py-2 bg-slate-600 text-white rounded-lg">
+              edit post
+            </button>
+            <button className="px-4 py-2 bg-red-600 text-white rounded-lg">
+              delete post
+            </button>
+          </div>
+        </div>
       </div>
       <div className="bg-gray-100 p-4 rounded-lg grid gap-4">
         <p>- Did you forget about Ben Franklin?</p>
