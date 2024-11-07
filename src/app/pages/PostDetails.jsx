@@ -1,8 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const PostDetails = () => {
   const { id } = useParams();
+
+  // const postedDate = formatDistanceToNow(parseISO(created_at), {
+  //   addSuffix: true,
+  // });
   // console.log(id);
 
   // get post
