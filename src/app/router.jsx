@@ -18,7 +18,7 @@ const router = createBrowserRouter([
         element: <div>About</div>,
       },
       {
-        path: 'createPost',
+        path: 'submit',
         element: <CreatePost />,
       },
     ],

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Searchbar } from "./Searchbar";
+import { Link } from 'react-router-dom';
+import { Searchbar } from './Searchbar';
 
 const Navbar = () => {
   return (
@@ -13,7 +13,7 @@ const Navbar = () => {
           <Link to="/" className="hover:underline">
             Home
           </Link>
-          <Link to="/createPost" className="hover:underline">
+          <Link to="/submit" className="hover:underline">
             Create New Post
           </Link>
         </div>
