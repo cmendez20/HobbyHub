@@ -4,6 +4,7 @@ import { Homepage } from './pages/Homepage';
 import { CreatePost } from './pages/CreatePost';
 import { RootLayout } from './pages/RootLayout';
 import { PostDetails } from './pages/PostDetails';
+import { EditPost } from './pages/EditPost';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: 'posts/:id',
         element: <PostDetails />,
+      },
+      {
+        path: 'posts/:id/edit',
+        element: <EditPost />,
       },
       {
         path: 'submit',

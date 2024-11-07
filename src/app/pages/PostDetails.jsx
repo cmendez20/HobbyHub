@@ -1,8 +1,9 @@
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const PostDetails = () => {
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
 
   // get post
 
@@ -16,9 +17,12 @@ const PostDetails = () => {
         <div className="flex justify-between items-center">
           <p className="font-extralight"># of upvotes</p>
           <div className="flex gap-4">
-            <button className="px-4 py-2 bg-slate-600 text-white rounded-lg">
+            <Link
+              to={`edit`}
+              className="px-4 py-2 bg-slate-600 text-white rounded-lg"
+            >
               edit post
-            </button>
+            </Link>
             <button className="px-4 py-2 bg-red-600 text-white rounded-lg">
               delete post
             </button>
