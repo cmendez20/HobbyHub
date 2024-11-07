@@ -1,5 +1,5 @@
-import Data from "../../data.json";
-import { PostCard } from "../../components/PostCard";
+import Data from '../../data.json';
+import { PostCard } from '../../components/PostCard';
 
 console.log(Data);
 
@@ -9,10 +9,12 @@ const Homepage = () => {
       <div className="flex items-center py-8">
         <p className="mr-4">Order by:</p>
         <div className="flex gap-4">
-          <button className="px-5 py-1.5 bg-green-500 rounded-lg">
+          <button className="px-5 py-1.5 bg-green-600 text-white rounded-lg">
             Newest
           </button>
-          <button className="px-5 bg-slate-500 rounded-lg">Most Popular</button>
+          <button className="px-5 bg-slate-600 rounded-lg text-white">
+            Most Popular
+          </button>
         </div>
       </div>
       {Data.map((post, i) => (
