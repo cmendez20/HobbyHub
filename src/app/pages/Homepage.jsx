@@ -1,9 +1,16 @@
 import Data from '../../data.json';
 import { PostCard } from '../../components/PostCard';
+import { useSearch } from '../SearchContext';
 
 console.log(Data);
 
 const Homepage = () => {
+  const { searchInput } = useSearch();
+
+  const filteredPosts = Data.filter(post =>
+    post.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   return (
     <main className="max-w-5xl mx-auto">
       <div className="flex items-center py-8">
@@ -17,7 +24,7 @@ const Homepage = () => {
           </button>
         </div>
       </div>
-      {Data.map((post, i) => (
+      {filteredPosts.map((post, i) => (
         <PostCard key={post.id} {...post} />
       ))}
     </main>
