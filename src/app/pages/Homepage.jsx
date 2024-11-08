@@ -1,15 +1,35 @@
-import Data from '../../data.json';
+// import Data from '../../data.json';
+import { useEffect, useState } from 'react';
 import { PostCard } from '../../components/PostCard';
 import { useSearch } from '../SearchContext';
-
-console.log(Data);
+import { supabase } from '../supabase-client';
+// console.log(Data);
 
 const Homepage = () => {
+  let [posts, setPosts] = useState(null);
+  let [isLoading, setIsLoading] = useState(false);
+  let filteredPosts = '';
+
   const { searchInput } = useSearch();
 
-  const filteredPosts = Data.filter(post =>
-    post.title.toLowerCase().includes(searchInput.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchPosts = async () => {
+      let { data, error } = await supabase.from('posts').select('*');
+      setIsLoading(true);
+      setPosts(
+        data.filter(post =>
+          post.title.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      );
+      console.log(posts);
+
+      setIsLoading(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  console.log(posts);
 
   return (
     <main className="max-w-5xl mx-auto">
@@ -24,9 +44,10 @@ const Homepage = () => {
           </button>
         </div>
       </div>
-      {filteredPosts.map((post, i) => (
-        <PostCard key={post.id} {...post} />
-      ))}
+      {posts === null && 'no posts yet!'}
+      {isLoading && 'loading posts...'}
+      {posts !== null &&
+        posts.map((post, i) => <PostCard key={post.id} {...post} />)}
     </main>
   );
 };
