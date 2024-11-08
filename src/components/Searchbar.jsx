@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useSearch } from '../app/SearchContext';
 
 const Searchbar = () => {
@@ -7,8 +6,6 @@ const Searchbar = () => {
   const handleInput = e => {
     setSearchInput(e.target.value);
   };
-
-  console.log(searchInput);
 
   return (
     <input
