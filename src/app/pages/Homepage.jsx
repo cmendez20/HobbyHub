@@ -1,35 +1,29 @@
 // import Data from '../../data.json';
-import { useEffect, useState } from 'react';
-import { PostCard } from '../../components/PostCard';
-import { useSearch } from '../SearchContext';
-import { supabase } from '../supabase-client';
-// console.log(Data);
+import { useEffect, useState } from "react";
+import { PostCard } from "../../components/PostCard";
+import { useSearch } from "../SearchContext";
+import { supabase } from "../supabase-client";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchAllPosts = async () => {
+  const { data, error } = await supabase.from("posts").select("*");
+  if (error) throw error;
+  return data;
+};
 
 const Homepage = () => {
-  let [posts, setPosts] = useState(null);
-  let [isLoading, setIsLoading] = useState(false);
-  let filteredPosts = '';
-
   const { searchInput } = useSearch();
+  const {
+    data: posts,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchAllPosts,
+  });
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      let { data, error } = await supabase.from('posts').select('*');
-      setIsLoading(true);
-      setPosts(
-        data.filter(post =>
-          post.title.toLowerCase().includes(searchInput.toLowerCase())
-        )
-      );
-      console.log(posts);
-
-      setIsLoading(false);
-    };
-
-    fetchPosts();
-  }, []);
-
-  console.log(posts);
+  if (isLoading) return <p>Loading posts...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <main className="max-w-5xl mx-auto">
@@ -44,10 +38,9 @@ const Homepage = () => {
           </button>
         </div>
       </div>
-      {posts === null && 'no posts yet!'}
-      {isLoading && 'loading posts...'}
-      {posts !== null &&
-        posts.map((post, i) => <PostCard key={post.id} {...post} />)}
+      {posts.map(post => (
+        <PostCard key={post.id} {...post} />
+      ))}
     </main>
   );
 };
