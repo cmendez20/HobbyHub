@@ -2,8 +2,9 @@ import { useParams, Link } from "react-router-dom";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
-const fetchPost = async (id) => {
+const fetchPost = async id => {
   const { data, error } = await supabase
     .from("posts")
     .select()
@@ -25,17 +26,25 @@ const PostDetails = () => {
     queryFn: () => fetchPost(id),
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="pt-16">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   if (error) return <div>Error {error.message}</div>;
 
-  const postedDate = formatDistanceToNow(parseISO(post.created_at), {
-    addSuffix: true,
-  });
+  const formatDate = timestamp => {
+    return formatDistanceToNow(parseISO(timestamp), {
+      addSuffix: true,
+    });
+  };
 
   return (
     <section className="max-w-5xl mx-auto pt-8">
       <div className="bg-white p-8 rounded-lg flex flex-col gap-4 mb-8">
-        <p className="font-extralight">{postedDate}</p>
+        <p className="font-extralight">{formatDate(post.created_at)}</p>
         <p className="font-bold text-xl">{post.title}</p>
         <p className="font-extralight">{post.content}</p>
         {post.image_url && <img src={post.image_url} alt="Post image" />}

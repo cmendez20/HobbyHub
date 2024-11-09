@@ -1,9 +1,8 @@
-// import Data from '../../data.json';
-import { useEffect, useState } from "react";
 import { PostCard } from "../../components/PostCard";
 import { useSearch } from "../SearchContext";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 const fetchAllPosts = async () => {
   const { data, error } = await supabase.from("posts").select("*");
@@ -22,7 +21,6 @@ const Homepage = () => {
     queryFn: fetchAllPosts,
   });
 
-  if (isLoading) return <p>Loading posts...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
@@ -38,9 +36,11 @@ const Homepage = () => {
           </button>
         </div>
       </div>
-      {posts.map(post => (
-        <PostCard key={post.id} {...post} />
-      ))}
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        posts.map(post => <PostCard key={post.id} {...post} />)
+      )}
     </main>
   );
 };
