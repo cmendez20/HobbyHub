@@ -49,7 +49,7 @@ const PostDetails = () => {
         <p className="font-extralight">{post.content}</p>
         {post.image_url && <img src={post.image_url} alt="Post image" />}
         <div className="flex justify-between items-center">
-          <p className="font-extralight">{post.upvotes} upvotes</p>
+          <p className="font-extralight">{post.upvotes || 0} upvotes</p>
           <div className="flex gap-4">
             <Link
               to={`edit`}
@@ -64,9 +64,8 @@ const PostDetails = () => {
         </div>
       </div>
       <div className="bg-gray-100 p-4 rounded-lg grid gap-4">
-        {post.comments.map((comment, i) => (
-          <p key={i}>- {comment}</p>
-        ))}
+        {post.comments !== null &&
+          post.comments.map((comment, i) => <p key={i}>- {comment}</p>)}
         <input type="text" placeholder="Leave a comment..." className="p-2" />
       </div>
     </section>
