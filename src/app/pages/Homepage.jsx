@@ -3,6 +3,7 @@ import { useSearch } from "../SearchContext";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { useEffect } from "react";
 
 const fetchAllPosts = async () => {
   const { data, error } = await supabase.from("posts").select("*");
@@ -11,7 +12,10 @@ const fetchAllPosts = async () => {
 };
 
 const Homepage = () => {
-  const { searchInput } = useSearch();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const {
     data: posts,
     isLoading,
@@ -20,6 +24,8 @@ const Homepage = () => {
     queryKey: ["posts"],
     queryFn: fetchAllPosts,
   });
+
+  const { searchInput } = useSearch();
 
   if (error) return <p>Error: {error.message}</p>;
 
@@ -39,7 +45,11 @@ const Homepage = () => {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        posts.map(post => <PostCard key={post.id} {...post} />)
+        posts
+          .filter(post =>
+            post.title.toLowerCase().includes(searchInput.toLowerCase())
+          )
+          .map(post => <PostCard key={post.id} {...post} />)
       )}
     </main>
   );

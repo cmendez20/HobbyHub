@@ -4,19 +4,33 @@ import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
-
-const fetchPost = async id => {
-  const { data, error } = await supabase
-    .from("posts")
-    .select()
-    .eq("id", id)
-    .single();
-
-  if (error) throw error;
-  return data;
-};
+import { useEffect, useState } from "react";
 
 const PostDetails = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  const [upvotes, setUpvotes] = useState(null);
+  const saveUpvotes = async () => {
+    const { data, error } = await supabase
+      .from("posts")
+      .update({ upvotes: upvotes })
+      .eq("id", id)
+      .select();
+  };
+  const fetchPost = async id => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select()
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+
+    setUpvotes(data.upvotes);
+    return data;
+  };
+
   const navigate = useNavigate();
   const { id } = useParams();
   const {
@@ -52,21 +66,40 @@ const PostDetails = () => {
     navigate("/");
   };
 
+  const handleClick = () => {
+    setUpvotes(prevUpvotes => prevUpvotes + 1);
+    console.log(upvotes);
+  };
+
   const formatDate = timestamp => {
     return formatDistanceToNow(parseISO(timestamp), {
       addSuffix: true,
     });
   };
 
+  // useEffect(() => {
+  //   console.log("upvotes from useEffect", upvotes);
+  //   saveUpvotes();
+  // }, [upvotes]);
+
   return (
-    <section className="max-w-5xl mx-auto pt-8">
+    <section className="max-w-2xl mx-auto pt-8">
       <div className="bg-white p-8 rounded-lg flex flex-col gap-4 mb-8">
         <p className="font-extralight">{formatDate(post.created_at)}</p>
         <p className="font-bold text-xl">{post.title}</p>
         <p className="font-extralight">{post.content}</p>
-        {post.image_url && <img src={post.image_url} alt="Post image" />}
+        {post.image_url && (
+          <img
+            src={post.image_url}
+            className="rounded-lg mb-4"
+            alt="Post image"
+          />
+        )}
         <div className="flex justify-between items-center">
-          <p className="font-extralight">{post.upvotes || 0} upvotes</p>
+          <div className="flex gap-1.5 items-center">
+            <button onClick={handleClick}>&uArr;</button>
+            {<p className="font-extralight"> {upvotes || 0} upvotes</p>}
+          </div>
           <div className="flex gap-4">
             <Link
               to={`edit`}

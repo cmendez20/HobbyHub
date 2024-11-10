@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Searchbar } from './Searchbar';
+import { Link } from "react-router-dom";
+import { Searchbar } from "./Searchbar";
+import { useEffect } from "react";
 
 const Navbar = () => {
   return (
