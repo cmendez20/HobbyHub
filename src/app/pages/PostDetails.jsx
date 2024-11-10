@@ -104,6 +104,7 @@ const PostDetails = () => {
             <Link
               to={`edit`}
               className="px-4 py-2 bg-slate-600 text-white rounded-lg"
+              state={post}
             >
               edit post
             </Link>

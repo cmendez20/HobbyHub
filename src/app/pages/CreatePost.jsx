@@ -33,13 +33,13 @@ const CreatePost = () => {
       >
         <input
           type="text"
-          {...register("title", { required: "A title is required." })}
+          {...register("title", { required: "Please enter a title." })}
           // name="title"
           placeholder="Title"
           className="px-4 py-2 rounded-lg"
         />
         {errors.title && (
-          <p className="text-red-600 px-2">{errors.title?.message}</p>
+          <p className="text-red-600  px-1">{errors.title?.message}</p>
         )}
         <textarea
           // name="content"

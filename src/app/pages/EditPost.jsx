@@ -1,29 +1,55 @@
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams, Form, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { supabase } from "../supabase-client";
 
 const EditPost = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
-  console.log('params from edit post:', id);
+  let { state } = useLocation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async data => {
+    const { spData, error } = await supabase
+      .from("posts")
+      .update(data)
+      .eq("id", id)
+      .select();
+
+    navigate(`../posts/${id}`);
+  };
 
   return (
     <div className="max-w-2xl mx-auto pt-16">
-      <form className="grid gap-8">
+      <Form className="grid gap-8" onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
-          name="title"
           placeholder="Title"
-          className="px-4 py-2 rounded-lg"
+          {...register("title", { required: "Please enter a title." })}
+          defaultValue={state.title}
+          className={`px-4 py-2 rounded-lg ${errors.title && `-mb-6`}`}
         />
+        {errors.title && (
+          <p className="text-red-600  px-1">{errors.title?.message}</p>
+        )}
         <textarea
-          name="content"
+          // name="content"
           id="content"
           placeholder="Content (Optional)"
           className="px-4 py-2 rounded-lg min-h-48"
+          {...register("content")}
+          defaultValue={state.content}
         ></textarea>
         <input
           type="text"
-          name="imageURL"
+          // name="imageURL"
           placeholder="Image URL (Optional)"
           className="px-4 py-2 rounded-lg"
+          {...register("image_url")}
+          defaultValue={state.image_url}
         />
         <button
           type="submit"
@@ -31,7 +57,7 @@ const EditPost = () => {
         >
           Update post
         </button>
-      </form>
+      </Form>
     </div>
   );
 };
