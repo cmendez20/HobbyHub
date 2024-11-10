@@ -1,8 +1,12 @@
 import { useLocation, useParams, Form, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { supabase } from "../supabase-client";
+import { useEffect } from "react";
 
 const EditPost = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const navigate = useNavigate();
   const { id } = useParams();
   let { state } = useLocation();

@@ -5,12 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const PostDetails = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   const [upvotes, setUpvotes] = useState(null);
+  const [comments, setComments] = useState([]);
   const saveUpvotes = async () => {
     const { data, error } = await supabase
       .from("posts")
@@ -28,6 +30,7 @@ const PostDetails = () => {
     if (error) throw error;
 
     setUpvotes(data.upvotes);
+    setComments(data.comments);
     return data;
   };
 
@@ -41,6 +44,8 @@ const PostDetails = () => {
     queryKey: ["post", id],
     queryFn: () => fetchPost(id),
   });
+
+  const { register, handleSubmit, reset } = useForm();
 
   if (isLoading) {
     return (
@@ -76,11 +81,6 @@ const PostDetails = () => {
       addSuffix: true,
     });
   };
-
-  // useEffect(() => {
-  //   console.log("upvotes from useEffect", upvotes);
-  //   saveUpvotes();
-  // }, [upvotes]);
 
   return (
     <section className="max-w-2xl mx-auto pt-8">
@@ -118,9 +118,22 @@ const PostDetails = () => {
         </div>
       </div>
       <div className="bg-gray-100 p-4 rounded-lg grid gap-4">
-        {post.comments !== null &&
-          post.comments.map((comment, i) => <p key={i}>- {comment}</p>)}
-        <input type="text" placeholder="Leave a comment..." className="p-2" />
+        {comments !== null &&
+          comments.map((comment, i) => <p key={i}>- {comment}</p>)}
+        <form
+          className=""
+          onSubmit={handleSubmit(data => {
+            setComments(prevComments => [...prevComments, data.comments]);
+            reset();
+          })}
+        >
+          <input
+            type="text"
+            placeholder="Leave a comment..."
+            className="p-2 w-full"
+            {...register("comments")}
+          />
+        </form>
       </div>
     </section>
   );
