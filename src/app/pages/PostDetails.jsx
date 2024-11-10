@@ -3,6 +3,7 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 import { supabase } from "../supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const fetchPost = async id => {
   const { data, error } = await supabase
@@ -16,6 +17,7 @@ const fetchPost = async id => {
 };
 
 const PostDetails = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const {
     data: post,
@@ -34,6 +36,21 @@ const PostDetails = () => {
     );
   }
   if (error) return <div>Error {error.message}</div>;
+
+  const handleDelete = async e => {
+    try {
+      const { data, error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error("error deleting post", error.message);
+    }
+
+    navigate("/");
+  };
 
   const formatDate = timestamp => {
     return formatDistanceToNow(parseISO(timestamp), {
@@ -57,7 +74,10 @@ const PostDetails = () => {
             >
               edit post
             </Link>
-            <button className="px-4 py-2 bg-red-600 text-white rounded-lg">
+            <button
+              className="px-4 py-2 bg-red-600 text-white rounded-lg"
+              onClick={handleDelete}
+            >
               delete post
             </button>
           </div>
