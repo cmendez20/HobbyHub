@@ -1,41 +1,43 @@
 import { useParams, Link } from "react-router-dom";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { supabase } from "../supabase-client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+
+const updateUpvotes = async ({ id, newUpvotes }) => {
+  const { data, error } = await supabase
+    .from("posts")
+    .update({ upvotes: newUpvotes })
+    .eq("id", id)
+    .select();
+  if (error) throw error;
+  return data;
+};
+
+const addComment = async ({ id, post, newComment }) => {
+  const { data, error } = await supabase
+    .from("posts")
+    .update({
+      comments: post.comments ? [...post.comments, newComment] : [newComment],
+    })
+    .eq("id", id)
+    .select();
+  if (error) throw error;
+  return data;
+};
 
 const PostDetails = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const [upvotes, setUpvotes] = useState(null);
-  const [comments, setComments] = useState([]);
-  const saveUpvotes = async () => {
-    const { data, error } = await supabase
-      .from("posts")
-      .update({ upvotes: upvotes })
-      .eq("id", id)
-      .select();
-  };
-  const fetchPost = async id => {
-    const { data, error } = await supabase
-      .from("posts")
-      .select()
-      .eq("id", id)
-      .single();
-
-    if (error) throw error;
-
-    setUpvotes(data.upvotes);
-    setComments(data.comments);
-    return data;
-  };
-
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { register, handleSubmit, reset } = useForm();
+
   const {
     data: post,
     isLoading,
@@ -45,16 +47,43 @@ const PostDetails = () => {
     queryFn: () => fetchPost(id),
   });
 
-  const { register, handleSubmit, reset } = useForm();
+  const upvoteMutation = useMutation({
+    mutationFn: updateUpvotes,
+    onMutate: cache => {
+      queryClient.setQueryData(["post", id], old => ({
+        ...old,
+        upvotes: cache.newUpvotes,
+      }));
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["post", id]);
+    },
+  });
 
-  if (isLoading) {
-    return (
-      <div className="pt-16">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-  if (error) return <div>Error {error.message}</div>;
+  const commentMutation = useMutation({
+    mutationFn: addComment,
+    onMutate: cache => {
+      queryClient.setQueryData(["post", id], old => ({
+        ...old,
+        comments: [...old.comments, cache.newComment],
+      }));
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["post", id]);
+    },
+  });
+
+  const fetchPost = async id => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select()
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  };
 
   const handleDelete = async e => {
     try {
@@ -72,8 +101,7 @@ const PostDetails = () => {
   };
 
   const handleClick = () => {
-    setUpvotes(prevUpvotes => prevUpvotes + 1);
-    console.log(upvotes);
+    upvoteMutation.mutate({ id, newUpvotes: post.upvotes + 1 });
   };
 
   const formatDate = timestamp => {
@@ -81,6 +109,15 @@ const PostDetails = () => {
       addSuffix: true,
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="pt-16">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+  if (error) return <div>Error {error.message}</div>;
 
   return (
     <section className="max-w-2xl mx-auto pt-8">
@@ -98,7 +135,7 @@ const PostDetails = () => {
         <div className="flex justify-between items-center">
           <div className="flex gap-1.5 items-center">
             <button onClick={handleClick}>&uArr;</button>
-            {<p className="font-extralight"> {upvotes || 0} upvotes</p>}
+            {<p className="font-extralight"> {post.upvotes || 0} upvotes</p>}
           </div>
           <div className="flex gap-4">
             <Link
@@ -118,12 +155,12 @@ const PostDetails = () => {
         </div>
       </div>
       <div className="bg-gray-100 p-4 rounded-lg grid gap-4">
-        {comments !== null &&
-          comments.map((comment, i) => <p key={i}>- {comment}</p>)}
+        {post.comments &&
+          post.comments.map((comment, i) => <p key={i}>- {comment}</p>)}
         <form
           className=""
           onSubmit={handleSubmit(data => {
-            setComments(prevComments => [...prevComments, data.comments]);
+            commentMutation.mutate({ id, post, newComment: data.comments });
             reset();
           })}
         >

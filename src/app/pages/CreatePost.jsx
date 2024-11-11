@@ -21,7 +21,7 @@ const CreatePost = () => {
             console.log(formData);
             const { data, error } = await supabase
               .from("posts")
-              .insert(formData)
+              .insert({ ...formData, comments: [] })
               .select();
             reset();
             navigate("/");
