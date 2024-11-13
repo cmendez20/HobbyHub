@@ -43,9 +43,9 @@ const Homepage = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <main className="max-w-5xl mx-auto">
-      <div className="flex items-center py-8">
-        <p className="mr-4">Order by:</p>
+    <main className="p-4 lg:p-0 max-w-5xl mx-auto">
+      <div className="flex items-center py-8 justify-center md:justify-start gap-4">
+        <p className="">Order by:</p>
         <div className="flex gap-4">
           <button
             className="px-5 py-1.5 bg-lime-600 text-white rounded-lg hover:bg-lime-700 transition-colors"
