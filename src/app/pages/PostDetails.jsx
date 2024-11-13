@@ -120,8 +120,8 @@ const PostDetails = () => {
   if (error) return <div>Error {error.message}</div>;
 
   return (
-    <section className="max-w-2xl mx-auto pt-8">
-      <div className="bg-white p-8 rounded-lg flex flex-col gap-4 mb-8">
+    <section className="max-w-2xl mx-auto pt-8 px-2 lg:px-0">
+      <div className="bg-white mb-4 p-8 rounded-lg flex flex-col gap-4 md:mb-8">
         <p className="font-extralight">{formatDate(post.created_at)}</p>
         <p className="font-bold text-xl">{post.title}</p>
         <p className="font-extralight">{post.content}</p>
@@ -132,12 +132,12 @@ const PostDetails = () => {
             alt="Post image"
           />
         )}
-        <div className="flex justify-between items-center">
+        <div className="flex-col gap-4 flex justify-between items-center sm:flex-row sm:gap-0">
           <div className="flex gap-1.5 items-center">
             <button onClick={handleClick}>&uArr;</button>
             {<p className="font-extralight"> {post.upvotes || 0} upvotes</p>}
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-8">
             <Link
               to={`edit`}
               className="px-4 py-2 bg-slate-600 text-white rounded-lg"

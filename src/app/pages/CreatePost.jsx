@@ -13,7 +13,7 @@ const CreatePost = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-2xl mx-auto pt-16">
+    <div className="px-4 md:px-0 max-w-2xl mx-auto pt-16">
       <Form
         className="grid gap-8"
         onSubmit={handleSubmit(async formData => {
