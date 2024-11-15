@@ -1,7 +1,7 @@
-import { useLocation, useParams, Form, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { supabase } from "../supabase-client";
-import { useEffect } from "react";
+import { useLocation, useParams, Form, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { supabase } from '../supabase-client';
+import { useEffect } from 'react';
 
 const EditPost = () => {
   useEffect(() => {
@@ -18,9 +18,9 @@ const EditPost = () => {
 
   const onSubmit = async data => {
     const { spData, error } = await supabase
-      .from("posts")
+      .from('posts')
       .update(data)
-      .eq("id", id)
+      .eq('id', id)
       .select();
 
     navigate(`../posts/${id}`);
@@ -32,7 +32,7 @@ const EditPost = () => {
         <input
           type="text"
           placeholder="Title"
-          {...register("title", { required: "Please enter a title." })}
+          {...register('title', { required: 'Please enter a title.' })}
           defaultValue={state.title}
           className={`px-4 py-2 rounded-lg ${errors.title && `-mb-6`}`}
         />
@@ -44,7 +44,7 @@ const EditPost = () => {
           id="content"
           placeholder="Content (Optional)"
           className="px-4 py-2 rounded-lg min-h-48"
-          {...register("content")}
+          {...register('content')}
           defaultValue={state.content}
         ></textarea>
         <input
@@ -52,12 +52,12 @@ const EditPost = () => {
           // name="imageURL"
           placeholder="Image URL (Optional)"
           className="px-4 py-2 rounded-lg"
-          {...register("image_url")}
+          {...register('image_url')}
           defaultValue={state.image_url}
         />
         <button
           type="submit"
-          className="px-5 py-2.5 bg-slate-600 text-white justify-self-start rounded-lg transition-colors hover:bg-slate-800"
+          className="px-5 py-2.5 text-white justify-self-start rounded-lg transition-colors bg-sky-600 hover:bg-sky-700"
         >
           Update post
         </button>

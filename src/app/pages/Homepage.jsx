@@ -1,18 +1,18 @@
-import { PostCard } from "../../components/PostCard";
-import { useSearch } from "../SearchContext";
-import { supabase } from "../supabase-client";
-import { useQuery } from "@tanstack/react-query";
-import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { useEffect, useState } from "react";
+import { PostCard } from '../../components/PostCard';
+import { useSearch } from '../SearchContext';
+import { supabase } from '../supabase-client';
+import { useQuery } from '@tanstack/react-query';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { useEffect, useState } from 'react';
 
 const Homepage = () => {
   const { searchInput } = useSearch();
-  const [orderBy, setOrderBy] = useState("id");
+  const [orderBy, setOrderBy] = useState('id');
 
   const fetchAllPosts = async () => {
     const { data, error } = await supabase
-      .from("posts")
-      .select("*")
+      .from('posts')
+      .select('*')
       .order(orderBy, { ascending: false });
     if (error) throw error;
     console.log(data);
@@ -28,16 +28,16 @@ const Homepage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["posts", orderBy],
+    queryKey: ['posts', orderBy],
     queryFn: fetchAllPosts,
   });
 
   const handleSortByNewest = () => {
-    setOrderBy("created_at");
+    setOrderBy('created_at');
   };
 
   const handleSortByPopular = () => {
-    setOrderBy("upvotes");
+    setOrderBy('upvotes');
   };
 
   if (error) return <p>Error: {error.message}</p>;
@@ -48,7 +48,7 @@ const Homepage = () => {
         <p className="">Order by:</p>
         <div className="flex gap-4">
           <button
-            className="px-5 py-1.5 bg-lime-600 text-white rounded-lg hover:bg-lime-700 transition-colors"
+            className="px-5 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
             onClick={handleSortByNewest}
           >
             Newest

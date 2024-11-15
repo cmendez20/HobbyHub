@@ -1,6 +1,6 @@
-import { useForm } from "react-hook-form";
-import { supabase } from "../supabase-client";
-import { useNavigate, Form } from "react-router-dom";
+import { useForm } from 'react-hook-form';
+import { supabase } from '../supabase-client';
+import { useNavigate, Form } from 'react-router-dom';
 
 const CreatePost = () => {
   const {
@@ -20,20 +20,20 @@ const CreatePost = () => {
           try {
             console.log(formData);
             const { data, error } = await supabase
-              .from("posts")
+              .from('posts')
               .insert({ ...formData, comments: [] })
               .select();
             reset();
-            navigate("/");
+            navigate('/');
             if (error) throw error;
           } catch (err) {
-            console.error("error saving post:", err.message);
+            console.error('error saving post:', err.message);
           }
         })}
       >
         <input
           type="text"
-          {...register("title", { required: "Please enter a title." })}
+          {...register('title', { required: 'Please enter a title.' })}
           // name="title"
           placeholder="Title"
           className="px-4 py-2 rounded-lg"
@@ -43,21 +43,21 @@ const CreatePost = () => {
         )}
         <textarea
           // name="content"
-          {...register("content")}
+          {...register('content')}
           id="content"
           placeholder="Content (Optional)"
           className="px-4 py-2 rounded-lg min-h-48"
         ></textarea>
         <input
           type="text"
-          {...register("image_url")}
+          {...register('image_url')}
           // name="imageURL"
           placeholder="Image URL (Optional)"
           className="px-4 py-2 rounded-lg"
         />
         <button
           type="submit"
-          className="px-5 py-2.5 bg-slate-600 text-white justify-self-start rounded-lg transition-colors hover:bg-slate-800"
+          className="px-5 py-2.5 text-white justify-self-start rounded-lg transition-colors  bg-sky-600 hover:bg-sky-700"
         >
           Create post
         </button>

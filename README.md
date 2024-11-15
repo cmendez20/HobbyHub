@@ -2,7 +2,7 @@
 
 Submitted by: **Christopher Mendez**
 
-This web app: **a forum to talk about mechanical keyboards!**
+This web app: **a forum to talk about all things Moo Deng!**
 
 Time spent: **15** hours spent in total
 

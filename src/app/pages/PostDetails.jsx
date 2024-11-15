@@ -1,17 +1,17 @@
-import { useParams, Link } from "react-router-dom";
-import { formatDistanceToNow, parseISO } from "date-fns";
-import { supabase } from "../supabase-client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { LoadingSpinner } from "../../components/LoadingSpinner";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useParams, Link } from 'react-router-dom';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { supabase } from '../supabase-client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 
 const updateUpvotes = async ({ id, newUpvotes }) => {
   const { data, error } = await supabase
-    .from("posts")
+    .from('posts')
     .update({ upvotes: newUpvotes })
-    .eq("id", id)
+    .eq('id', id)
     .select();
   if (error) throw error;
   return data;
@@ -19,11 +19,11 @@ const updateUpvotes = async ({ id, newUpvotes }) => {
 
 const addComment = async ({ id, post, newComment }) => {
   const { data, error } = await supabase
-    .from("posts")
+    .from('posts')
     .update({
       comments: post.comments ? [...post.comments, newComment] : [newComment],
     })
-    .eq("id", id)
+    .eq('id', id)
     .select();
   if (error) throw error;
   return data;
@@ -43,41 +43,41 @@ const PostDetails = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["post", id],
+    queryKey: ['post', id],
     queryFn: () => fetchPost(id),
   });
 
   const upvoteMutation = useMutation({
     mutationFn: updateUpvotes,
     onMutate: cache => {
-      queryClient.setQueryData(["post", id], old => ({
+      queryClient.setQueryData(['post', id], old => ({
         ...old,
         upvotes: cache.newUpvotes,
       }));
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["post", id]);
+      queryClient.invalidateQueries(['post', id]);
     },
   });
 
   const commentMutation = useMutation({
     mutationFn: addComment,
     onMutate: cache => {
-      queryClient.setQueryData(["post", id], old => ({
+      queryClient.setQueryData(['post', id], old => ({
         ...old,
         comments: [...old.comments, cache.newComment],
       }));
     },
     onSettled: () => {
-      queryClient.invalidateQueries(["post", id]);
+      queryClient.invalidateQueries(['post', id]);
     },
   });
 
   const fetchPost = async id => {
     const { data, error } = await supabase
-      .from("posts")
+      .from('posts')
       .select()
-      .eq("id", id)
+      .eq('id', id)
       .single();
 
     if (error) throw error;
@@ -88,16 +88,16 @@ const PostDetails = () => {
   const handleDelete = async e => {
     try {
       const { data, error } = await supabase
-        .from("posts")
+        .from('posts')
         .delete()
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) throw error;
     } catch (error) {
-      console.error("error deleting post", error.message);
+      console.error('error deleting post', error.message);
     }
 
-    navigate("/");
+    navigate('/');
   };
 
   const handleClick = () => {
@@ -140,13 +140,13 @@ const PostDetails = () => {
           <div className="flex gap-8">
             <Link
               to={`edit`}
-              className="px-4 py-2 bg-slate-600 text-white rounded-lg"
+              className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
               state={post}
             >
               edit post
             </Link>
             <button
-              className="px-4 py-2 bg-red-600 text-white rounded-lg"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
               onClick={handleDelete}
             >
               delete post
@@ -168,7 +168,7 @@ const PostDetails = () => {
             type="text"
             placeholder="Leave a comment..."
             className="p-2 w-full"
-            {...register("comments")}
+            {...register('comments')}
           />
         </form>
       </div>
