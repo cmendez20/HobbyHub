@@ -37,7 +37,7 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![Final Project DEMO](./public/codepath-final-project-demo.gif)
 
 GIF created with LICEcap
 
@@ -47,6 +47,7 @@ GIF created with LICEcap
 - Instead of reinventing the wheel, I used a JS library called **date-fns** to format post timestamps which required researching the library's docs on how to use it in a way that would work with my project.
 - Used **Tanstack query** for fetching data and handling async state management with Supabase. Ran into issues with updating posts on the client and syncing them to the database, so I spent some time learning about useMutations.
 - Researched the **useContext** hook to set up global state, allowing the search bar in the navbar the ability to filter posts effectively.
+- In terms of improvements for next time, I would've like to spent some more time on the design and branding of the forum. Maybe add a little hippo mascot to the navbar logo & favicon. I would like to add a little hippo mouth opening animation when a user upvotes a post. Finally, not a big fan of the colors.
 
 ## License
 
